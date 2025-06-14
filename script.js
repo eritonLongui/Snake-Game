@@ -1,6 +1,10 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const box = 20; // tamanho da "caixinha" do grid
+const colorSnake = document.querySelectorAll('.colorSnake')
+let isGameStarted = false;
+let isWaitingToRestart = false;
+
 let score = 0;
 let snake = [];
 snake[0] = { x: 9 * box, y: 9 * box }; // posição inicial
@@ -11,12 +15,52 @@ let food = {
 };
 let gameInterval;
 let speed = 200; // Velocidade inicial (ms)
+let skinColor = ['green', 'lime']
 
 // Sons
 const eatSound = new Audio('assets/eat.mp3');
 const gameOverSound = new Audio('assets/gameover.mp3');
 
-document.addEventListener('keydown', directionControl);
+
+window.addEventListener('DOMContentLoaded', () => {
+    const radios = document.querySelectorAll('input.colorSnake');
+    if(radios.length > 0) {
+        radios[0].checked = true; // Marca o primeiro radio da lista
+    }
+});
+
+colorSnake.forEach(radio => {
+    radio.addEventListener('change', colorSelected);
+});
+
+function colorSelected() {
+    const selected = document.querySelector('input.colorSnake:checked');
+    
+    if (selected.value == 'green') skinColor = ['green', 'lime'];
+    else if (selected.value == 'orange') skinColor = ['orangeRed', 'darkOrange'];
+    else if (selected.value == 'blue') skinColor = ['darkBlue', 'mediumBlue'];
+
+    selected.blur();
+}
+
+
+function startGame() {
+    if (isWaitingToRestart) {
+        resetGame()
+        setTimeout(1500)
+        isWaitingToRestart = false;
+    }
+    if (!isGameStarted) {
+        isGameStarted = true;
+        clearInterval(gameInterval)
+        gameInterval = setInterval(draw, speed);
+    }
+}
+
+document.addEventListener('keydown', function(e) {
+    startGame();
+    directionControl(e);
+});
 
 function directionControl(event) {
   if (event.key === 'ArrowLeft' || event.key === 'a') direction = 'LEFT';
@@ -31,7 +75,7 @@ function draw() {
 
   // Desenha a cobrinha
   for (let i = 0; i < snake.length; i++) {
-    ctx.fillStyle = (i === 0) ? 'lime' : 'green';
+    ctx.fillStyle = (i === 0) ? skinColor[1] : skinColor[0];
     ctx.fillRect(snake[i].x, snake[i].y, box, box);
   }
 
@@ -73,7 +117,9 @@ function draw() {
   if (headX < 0 || headY < 0 || headX >= 400 || headY >= 400 || collision(newHead, snake)) {
     gameOverSound.play();
     clearInterval(gameInterval);
-    setTimeout(resetGame, 1500);
+    isGameStarted = false;
+    isWaitingToRestart = true;
+    document.addEventListener('keydown', startGame, { once: true });
     return;
   }
 
@@ -102,4 +148,3 @@ function resetGame() {
   gameInterval = setInterval(draw, speed);
 }
 
-gameInterval = setInterval(draw, speed);
