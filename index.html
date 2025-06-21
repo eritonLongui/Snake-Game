@@ -11,14 +11,21 @@
 <body>
     <div>
         <h1>Snake Game</h1>
-        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <canvas id="gameCanvas" width="600" height="600"></canvas>
         <p>Score: <span id="score">0</span></p>
     </div>
     <div>
-        <h3>Escolha uma opção:</h3>
-        <label><input class="colorSnake" type="radio" name="color" value="green">Cor: Verde</label>
-        <label><input class="colorSnake" type="radio" name="color" value="orange">Cor: Laranja</label>
-        <label><input class="colorSnake" type="radio" name="color" value="blue">Cor: Azul</label>
+        <h3>Escolha uma cor:</h3>
+        <label><input class="colorSnake" type="radio" name="color" value="green">Verde</label>
+        <label><input class="colorSnake" type="radio" name="color" value="orange">Laranja</label>
+        <label><input class="colorSnake" type="radio" name="color" value="blue">Azul</label>
+        <label><input class="colorSnake" type="radio" name="color" value="purple">Roxo</label>
+        <label><input class="colorSnake" type="radio" name="color" value="light-blue">Azul claro</label>
+    </div>
+    <div>
+        <h2>Pontuação nas últimas partidas</h2>
+        <div id="scoreboard"></div>
+        <div id="timeInterval"></div>
     </div>
     <script src="./script.js"></script>
 </body>

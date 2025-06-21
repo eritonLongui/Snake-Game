@@ -1,26 +1,40 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-const box = 20; // tamanho da "caixinha" do grid
+const box = 30; // tamanho da "caixinha" do grid
 const colorSnake = document.querySelectorAll('.colorSnake')
 let isGameStarted = false;
 let isWaitingToRestart = false;
 
 let score = 0;
+let time = 0;
 let snake = [];
 snake[0] = { x: 9 * box, y: 9 * box }; // posição inicial
 let direction = 'RIGHT';
-let food = {
-  x: Math.floor(Math.random() * 20) * box,
-  y: Math.floor(Math.random() * 20) * box
-};
+let food = {x: 0, y: 0};
 let gameInterval;
 let speed = 200; // Velocidade inicial (ms)
 let skinColor = ['green', 'lime']
+let scoreboard = [];
+let timeInterval;
 
 // Sons
 const eatSound = new Audio('assets/eat.mp3');
 const gameOverSound = new Audio('assets/gameover.mp3');
 
+
+function foodRandon() {
+  food = {
+  x: Math.floor(Math.random() * 20) * box,
+  y: Math.floor(Math.random() * 20) * box
+  };
+  while (collision(food, snake)) {
+    food = {
+    x: Math.floor(Math.random() * 20) * box,
+    y: Math.floor(Math.random() * 20) * box
+    };
+  }
+}
+foodRandon();
 
 window.addEventListener('DOMContentLoaded', () => {
     const radios = document.querySelectorAll('input.colorSnake');
@@ -39,22 +53,27 @@ function colorSelected() {
     if (selected.value == 'green') skinColor = ['green', 'lime'];
     else if (selected.value == 'orange') skinColor = ['orangeRed', 'darkOrange'];
     else if (selected.value == 'blue') skinColor = ['darkBlue', 'mediumBlue'];
+    else if (selected.value == 'purple') skinColor = ['blueViolet', 'darkViolet'];
+    else if (selected.value == 'light-blue') skinColor = ['mediumTurquoise', 'darkTurquoise'];
 
     selected.blur();
 }
 
-
 function startGame() {
-    if (isWaitingToRestart) {
-        resetGame()
-        setTimeout(1500)
-        isWaitingToRestart = false;
-    }
-    if (!isGameStarted) {
-        isGameStarted = true;
-        clearInterval(gameInterval)
-        gameInterval = setInterval(draw, speed);
-    }
+  if (isWaitingToRestart) {
+      resetGame()
+      setTimeout(1500)
+      isWaitingToRestart = false;
+  }
+  if (!isGameStarted) {
+      isGameStarted = true;
+      timeInterval = setInterval(function() {
+        time = time + 0.1;
+        document.getElementById('timeInterval').textContent = time.toFixed(1);
+        }, 100);
+      clearInterval(gameInterval)
+      gameInterval = setInterval(draw, speed);
+  }
 }
 
 document.addEventListener('keydown', function(e) {
@@ -71,7 +90,7 @@ function directionControl(event) {
 
 function draw() {
   ctx.fillStyle = '#111';
-  ctx.fillRect(0, 0, 400, 400);
+  ctx.fillRect(0, 0, 600, 600);
 
   // Desenha a cobrinha
   for (let i = 0; i < snake.length; i++) {
@@ -95,16 +114,13 @@ function draw() {
 
   // Se a cobra comer a comida
   if (headX === food.x && headY === food.y) {
-    score++;
+    score += 5;
     document.getElementById('score').textContent = score;
     eatSound.play();
-    food = {
-      x: Math.floor(Math.random() * 20) * box,
-      y: Math.floor(Math.random() * 20) * box
-    };
+    foodRandon()
     // Aumenta a velocidade
     clearInterval(gameInterval);
-    speed = Math.max(50, speed - 10); // limite mínimo
+    speed = Math.max(50, speed - 5); // limite mínimo
     gameInterval = setInterval(draw, speed);
   } else {
     snake.pop(); // remove o rabo
@@ -114,12 +130,19 @@ function draw() {
   let newHead = { x: headX, y: headY };
 
   // Game Over: bate na parede ou em si mesmo
-  if (headX < 0 || headY < 0 || headX >= 400 || headY >= 400 || collision(newHead, snake)) {
+  if (headX < 0 || headY < 0 || headX >= 600 || headY >= 600 || collision(newHead, snake)) {
     gameOverSound.play();
+    clearInterval(timeInterval);
     clearInterval(gameInterval);
     isGameStarted = false;
     isWaitingToRestart = true;
     document.addEventListener('keydown', startGame, { once: true });
+
+    // Guardar pontuação do jogo
+    scoreboard.push(score)
+    const lastIndex = scoreboard.length - 1;
+    const lastScore = scoreboard[lastIndex];
+    localStorage.setItem(lastIndex.toString(), lastScore);
     return;
   }
 
@@ -136,14 +159,12 @@ function collision(head, array) {
 function resetGame() {
   score = 0;
   document.getElementById('score').textContent = score;
+  document.getElementById('scoreboard').textContent = scoreboard;
   snake = [];
   snake[0] = { x: 9 * box, y: 9 * box };
   direction = 'RIGHT';
   speed = 200;
-  food = {
-    x: Math.floor(Math.random() * 20) * box,
-    y: Math.floor(Math.random() * 20) * box
-  };
+  foodRandon()
   clearInterval(gameInterval);
   gameInterval = setInterval(draw, speed);
 }
