@@ -17,6 +17,7 @@ body {
 canvas {
   background-color: #111;
   border: 2px solid #fff;
+  margin: 0 auto;
 }
 
 h1 {
@@ -28,21 +29,78 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #1A1A1A;
+}
+
+header p,
+header label {
+  margin: 0 30px;
+  font-size: 40px;
+}
+
+h1 {
+  font-size: 60px;
+}
+
+.checkbox-container {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  height: 25px;
+  width: 25px;
+  border-radius: 15px;
+  background-color: #E8E8E8;
+  border: 2px solid #000 ;
+}
+
+.checkbox-container input:checked ~ .checkmark {
+  background-color: #1A1A1A;
+}
+
+header label p {
+  margin: 0;
+  padding-left: 15px;
+  font-size: 20px;
 }
 
 aside {
-  height: 700px;
+  height: 650px;
+  width: 380px;
   display: flex;
   flex-direction: column;
   gap: 100px;
 }
 
-.snake-selected {
-  width: 300px;
-  height: 90px;
-  margin: 0 auto;
-  background-color: #111;
-  border: 2px solid #fff;
+aside.registros-pontuacoes {
+  justify-content: space-between;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+}
+
+aside h2 {
+  font-size: 25px;
+  margin-bottom: 15px;
+}
+
+aside label {
+  margin: 10px;
+}
+
+aside label input {
+  margin-right: 5px;
 }
 
 main {
@@ -54,4 +112,22 @@ main {
 #scoreboard {
   list-style-type: none;
   padding-left: 0;
+}
+
+#timeInterval,
+ul li {
+  margin: 5px;
+}
+
+footer {
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+footer a {
+  font-size: 25px;
+  color: #fff;
 }

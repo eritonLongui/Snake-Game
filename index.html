@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake Game - Ériton</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
     <link rel="stylesheet" href="./styles.css">
 </head>
 
@@ -12,46 +15,67 @@
     <header>
         <p>🐍</p>
         <h1>Snake Game</h1>
-        <label><input type="checkbox" id="dark-mode-toggle"></label>
+        <label class="checkbox-container">
+            <input type="checkbox" id="dark-mode-toggle"><span class="checkmark"></span>
+            <p>Modo</p>
+        </label>
     </header>
     <main>
         <aside>
             <div>
                 <h2>Escolha uma cor:</h2>
-                <label><input class="colorSnake" type="radio" name="color" value="green">Verde</label>
-                <label><input class="colorSnake" type="radio" name="color" value="orange">Laranja</label>
-                <label><input class="colorSnake" type="radio" name="color" value="blue">Azul</label>
-                <label><input class="colorSnake" type="radio" name="color" value="purple">Roxo</label>
-                <label><input class="colorSnake" type="radio" name="color" value="light-blue">Azul claro</label>
+                <label>
+                    <input class="colorSnake" type="radio" name="color" value="green">
+                    Verde
+                </label>
+                <label>
+                    <input class="colorSnake" type="radio" name="color" value="orange">
+                    Laranja
+                </label>
+                <label>
+                    <input class="colorSnake" type="radio" name="color" value="blue">
+                    Azul
+                </label>
+                <label>
+                    <input class="colorSnake" type="radio" name="color" value="purple">
+                    Roxo
+                </label>
             </div>
-            <div class="snake-selected"></div>
+            <canvas id="snakeSelected" width="300" height="150"></canvas>
+            <!-- 
             <div>
                 <h2>Tamanho de mapa:</h2>
                 <label><input class="mapSize" type="radio" name="map" value="small">Pequeno</label>
                 <label><input class="mapSize" type="radio" name="map" value="medium">Médio</label>
                 <label><input class="mapSize" type="radio" name="map" value="large">Grande</label>
             </div>
+             -->
         </aside>
         <section>
             <canvas id="gameCanvas" width="600" height="600"></canvas>
         </section>
-        <aside>
+        <aside class="registros-pontuacoes">
+            <section>
+                <div>
+                    <h2>Melhor Pontuação</h2>
+                    <div id="record">0</div>
+                </div>
+                <div>
+                    <h2>Pontuação nas últimas partidas</h2>
+                    <ul id="scoreboard"></ul>
+                </div>
+            </section>
             <div>
-                <h2>Melhor Pontuação</h2>
-                <div id="record">0</div>
-            </div>
-            <div>
-                <h2>Pontuação nas últimas partidas</h2>
-                <ul id="scoreboard"></ul>
-            </div>
-            <div>
-                <p>Score: <span id="score">0</span></p>
+                <p>Pontuação: <span id="score">0</span></p>
                 <div id="timeInterval"></div>
             </div>
         </aside>
     </main>
     <footer>
         <h2>Contato e Redes sociais</h2>
+        <a href="https://github.com/eritonLongui"><i class="fa-brands fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/eritonLongui/"><i class="fa-brands fa-linkedin"></i></a>
+        <a href="https://www.instagram.com/eriton_longui/"><i class="fa-brands fa-instagram"></i></a>
     </footer>
     <script src="./script.js"></script>
 </body>

@@ -1,5 +1,7 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+const canvas2 = document.getElementById('snakeSelected');
+const ctx2 = canvas2.getContext('2d');
 const box = 30; // tamanho da "caixinha" do grid
 const colorSnake = document.querySelectorAll('.colorSnake')
 let isGameStarted = false;
@@ -71,18 +73,18 @@ function colorSelected() {
     const selected = document.querySelector('input.colorSnake:checked');
     
     if (selected.value == 'green') skinColor = ['green', 'lime'];
-    else if (selected.value == 'orange') skinColor = ['orangeRed', 'darkOrange'];
+    else if (selected.value == 'orange') skinColor = ['darkOrange', 'gold'];
     else if (selected.value == 'blue') skinColor = ['darkBlue', 'mediumBlue'];
-    else if (selected.value == 'purple') skinColor = ['blueViolet', 'darkViolet'];
-    else if (selected.value == 'light-blue') skinColor = ['mediumTurquoise', 'darkTurquoise'];
+    else if (selected.value == 'purple') skinColor = ['darkViolet', 'blueViolet'];
 
     selected.blur();
+    drawModel();
 }
 
 
 function startGame() {
   if (isWaitingToRestart) {
-      resetGame()
+      resetGame();
       setTimeout(1500)
       isWaitingToRestart = false;
   }
@@ -138,7 +140,7 @@ function draw() {
     score += 5;
     document.getElementById('score').textContent = score;
     eatSound.play();
-    foodRandon()
+    foodRandon();
     // Aumenta a velocidade
     clearInterval(gameInterval);
     speed = Math.max(50, speed - 5); // limite mínimo
@@ -173,7 +175,7 @@ function collision(head, array) {
 
 
 function resetGame() {
-  saveScore(score, time.toFixed(1))
+  saveScore(score, time.toFixed(1));
   score = 0;
   time = 0;
   document.getElementById('score').textContent = score;
@@ -181,7 +183,7 @@ function resetGame() {
   snake[0] = { x: 9 * box, y: 9 * box };
   direction = 'RIGHT';
   speed = 200;
-  foodRandon()
+  foodRandon();
   clearInterval(gameInterval);
   gameInterval = setInterval(draw, speed);
 }
@@ -225,3 +227,21 @@ function saveScore(newScore, newTime) {
 
   localStorage.setItem('jogoData', JSON.stringify(data));
 }
+
+function drawModel() {
+  ctx2.fillStyle = '#111';
+  ctx2.fillRect(0, 0, 300, 150);
+
+  // Desenha a cobrinha
+  for (let i = 0; i < 3; i++) {
+    ctx2.fillStyle = (i === 0) ? skinColor[1] : skinColor[0];
+    ctx2.fillRect(120 - (30 * i), 60, box, box);
+  }
+  // ctx2.fillStyle = skinColor[0];
+  // ctx2.fillRect(60, 90, box, box)
+
+  // Desenha a comida
+  ctx2.fillStyle = 'red';
+  ctx2.fillRect(210, 60, box, box);
+}
+drawModel();
