@@ -14,12 +14,31 @@ let food = {x: 0, y: 0};
 let gameInterval;
 let speed = 200; // Velocidade inicial (ms)
 let skinColor = ['green', 'lime']
-let scoreboard = [];
 let timeInterval;
+const scoreboard = {
+  record: {
+    pontuacao: 0,
+    tempo: 0,
+  },
+  partidas: []
+};
 
 // Sons
 const eatSound = new Audio('assets/eat.mp3');
 const gameOverSound = new Audio('assets/gameover.mp3');
+
+
+// Carregar ao iniciar a página
+if (!localStorage.getItem('jogoData')) {
+  localStorage.setItem('jogoData', JSON.stringify(scoreboard))
+} else {
+  data = JSON.parse(localStorage.getItem('jogoData'));
+  data.partidas = [];
+  localStorage.setItem('jogoData', JSON.stringify(data))
+}
+
+let savedData = JSON.parse(localStorage.getItem('jogoData'));
+document.getElementById('record').textContent = `Pontuação: ${savedData.record.pontuacao} Tempo: ${savedData.record.tempo}`;
 
 
 function foodRandon() {
@@ -35,6 +54,7 @@ function foodRandon() {
   }
 }
 foodRandon();
+
 
 window.addEventListener('DOMContentLoaded', () => {
     const radios = document.querySelectorAll('input.colorSnake');
@@ -58,6 +78,7 @@ function colorSelected() {
 
     selected.blur();
 }
+
 
 function startGame() {
   if (isWaitingToRestart) {
@@ -137,12 +158,6 @@ function draw() {
     isGameStarted = false;
     isWaitingToRestart = true;
     document.addEventListener('keydown', startGame, { once: true });
-
-    // Guardar pontuação do jogo
-    scoreboard.push(score)
-    const lastIndex = scoreboard.length - 1;
-    const lastScore = scoreboard[lastIndex];
-    localStorage.setItem(lastIndex.toString(), lastScore);
     return;
   }
 
@@ -156,10 +171,12 @@ function collision(head, array) {
   return false;
 }
 
+
 function resetGame() {
+  saveScore(score, time.toFixed(1))
   score = 0;
+  time = 0;
   document.getElementById('score').textContent = score;
-  document.getElementById('scoreboard').textContent = scoreboard;
   snake = [];
   snake[0] = { x: 9 * box, y: 9 * box };
   direction = 'RIGHT';
@@ -169,3 +186,42 @@ function resetGame() {
   gameInterval = setInterval(draw, speed);
 }
 
+
+// Atualizar após uma partida
+function saveScore(newScore, newTime) {
+  // Selecionar dados atualizados
+  let data = JSON.parse(localStorage.getItem('jogoData'));
+  const ul = document.getElementById('scoreboard');
+
+  let partida = {
+    pontuacao: newScore,
+    tempo: newTime,
+  };
+
+  // Verificar se é recorde
+  if (newScore > data.record.pontuacao) {
+    data.record.pontuacao = newScore;
+    data.record.tempo = newTime;
+  }
+  
+  // Inserir pontuação na lista
+  data.partidas.unshift(partida)
+  
+  // Manter somente as 4 últimas
+  if (data.partidas.length > 4) {
+    data.partidas.pop();
+  }
+  
+  // Exibir pontuações
+  document.getElementById('record').textContent = `Pontuação: ${data.record.pontuacao} Tempo: ${data.record.tempo}`;
+  
+  ul.innerHTML = '';
+  data.partidas.forEach((partida, i) => {
+    const li = document.createElement('li');
+
+    li.textContent = `${i + 1}. Pontuação: ${partida.pontuacao} Tempo: ${partida.tempo}`;
+    ul.appendChild(li);
+  });
+
+  localStorage.setItem('jogoData', JSON.stringify(data));
+}
