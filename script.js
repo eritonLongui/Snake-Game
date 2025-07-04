@@ -1,3 +1,6 @@
+const darkModeToggle = document.getElementById('darkModeToggle');
+const header = document.querySelector('header');
+
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const canvas2 = document.getElementById('snakeSelected');
@@ -28,6 +31,25 @@ const scoreboard = {
 // Sons
 const eatSound = new Audio('assets/eat.mp3');
 const gameOverSound = new Audio('assets/gameover.mp3');
+
+
+function enableLightMode() {
+  document.body.classList.add('light-mode');
+  header.classList.add('light-mode');
+}
+
+function disableLightMode() {
+  document.body.classList.remove('light-mode');
+  header.classList.remove('light-mode');
+}
+
+darkModeToggle.addEventListener('change', () => {
+  if (darkModeToggle.checked) {
+    enableLightMode();
+  } else {
+    disableLightMode();
+  }
+});
 
 
 // Carregar ao iniciar a página

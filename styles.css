@@ -14,6 +14,8 @@ body {
   min-height: 100vh;
 }
 
+
+
 canvas {
   background-color: #111;
   border: 2px solid #fff;
@@ -66,10 +68,10 @@ h1 {
   background-color: #1A1A1A;
 }
 
-header label p {
+header label i {
   margin: 0;
-  padding-left: 15px;
-  font-size: 20px;
+  padding-left: 10px;
+  font-size: 15px;
 }
 
 aside {
@@ -130,4 +132,19 @@ footer {
 footer a {
   font-size: 25px;
   color: #fff;
+}
+
+
+
+body.light-mode {
+  background-color: #E8E8E8;
+  color: #000;
+}
+
+body.light-mode i {
+  color: #000;
+}
+
+header.light-mode {
+  background-color: #ddd;
 }
